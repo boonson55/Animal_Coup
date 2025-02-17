@@ -22,6 +22,7 @@ const PORT = process.env.PORT || 8000;
 const origins = [
     "http://localhost:3000",
     "http://localhost:8000",
+    "http://127.0.0.1:3000",
 ];
 app.use(
     cors({
@@ -72,5 +73,5 @@ const apiLimiter = rateLimit({
 app.use('/api', apiLimiter);
 
 server.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });

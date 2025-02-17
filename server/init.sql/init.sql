@@ -1,8 +1,8 @@
 -- ตั้งค่า Character Set เป็น utf8mb4_general_ci สำหรับ Database
-CREATE DATABASE IF NOT EXISTS project_coup 
+CREATE DATABASE IF NOT EXISTS animal_coup 
 CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
-USE project_coup;
+USE animal_coup;
 
 -- ตั้งค่า Timezone เป็น Asia/Bangkok
 SET time_zone = '+07:00';

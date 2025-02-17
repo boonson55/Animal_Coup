@@ -5,7 +5,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: project_coup
+      MYSQL_DATABASE: animal_coup
       MYSQL_USER: user
       MYSQL_PASSWORD: userpassword
       TZ: Asia/Bangkok
