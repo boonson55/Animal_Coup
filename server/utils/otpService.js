@@ -82,15 +82,15 @@ const sendPassword = async (email, newPassword) => {
     }
 
     const transporter = nodemailer.createTransport({
-        host: 'smtp.office365.com',  // SMTP Host
-        port: 587,                  // Port สำหรับ TLS
-        secure: false,              // false สำหรับ TLS (STARTTLS)
+        host: 'smtp.office365.com',
+        port: 587,
+        secure: false,
         auth: {
-            user: process.env.EMAIL_USER, // อีเมลผู้ส่ง (บัญชี Office 365)
-            pass: process.env.EMAIL_PASS  // รหัสผ่านผู้ส่ง (บัญชี Office 365)
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
         },
         tls: {
-            ciphers: 'SSLv3' // ระบุ cipher suite สำหรับการเข้ารหัส
+            ciphers: 'SSLv3'
         }
     });
 

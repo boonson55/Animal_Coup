@@ -59,7 +59,6 @@ const socketioMiddleware = (io) => {
         });
 
         socket.on("getUserStatus", async (user_id, callback) => {
-            // callback(statusUsers[user_id] || null);
             if (!statusUsers[user_id]) {
                 return callback(null);
             }
