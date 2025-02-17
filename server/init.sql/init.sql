@@ -24,6 +24,8 @@ INSERT INTO users (player_name, username, password, email, permission) VALUES ('
 INSERT INTO users (player_name, username, password, email, permission) VALUES ('test', 'test', '$argon2id$v=19$m=65536,t=3,p=1$ZLzLRa17Zhe4AjF8LMVPJg$mPfvsqYINEKb7wIICShELJmN/0iZBtfoWTXZz4jt8Ws', 'test@test.com', 'member');
 INSERT INTO users (player_name, username, password, email, permission) VALUES ('member', 'member', '$argon2id$v=19$m=65536,t=3,p=1$Sv3tV/IjmHKzzNAhU8DWzw$b6Mr9/WuhwCE6ECTFtChqdNRSFjqS3CndrNhyxb+EUw', 'member@member.com', 'member');
 INSERT INTO users (player_name, username, password, email, permission) VALUES ('member2', 'member2', '$argon2id$v=19$m=65536,t=3,p=1$Sv3tV/IjmHKzzNAhU8DWzw$b6Mr9/WuhwCE6ECTFtChqdNRSFjqS3CndrNhyxb+EUw', 'member2@member2.com', 'member');
+INSERT INTO users (player_name, username, password, email, permission) VALUES ('member3', 'member3', '$argon2id$v=19$m=65536,t=3,p=1$Sv3tV/IjmHKzzNAhU8DWzw$b6Mr9/WuhwCE6ECTFtChqdNRSFjqS3CndrNhyxb+EUw', 'member3@member3.com', 'member');
+INSERT INTO users (player_name, username, password, email, permission) VALUES ('member4', 'member4', '$argon2id$v=19$m=65536,t=3,p=1$Sv3tV/IjmHKzzNAhU8DWzw$b6Mr9/WuhwCE6ECTFtChqdNRSFjqS3CndrNhyxb+EUw', 'member4@member4.com', 'member');
 
 -- ตาราง user_stats
 CREATE TABLE user_stats (
@@ -36,6 +38,8 @@ CREATE TABLE user_stats (
 INSERT INTO user_stats (user_id, game_count, game_win) VALUES ('3','5','4');
 INSERT INTO user_stats (user_id, game_count, game_win) VALUES ('4','4','2');
 INSERT INTO user_stats (user_id, game_count, game_win) VALUES ('5','5','3');
+INSERT INTO user_stats (user_id, game_count, game_win) VALUES ('6','6','1');
+INSERT INTO user_stats (user_id, game_count, game_win) VALUES ('7','3','1');
 
 -- ตาราง user_bans
 CREATE TABLE user_bans (
@@ -47,6 +51,8 @@ CREATE TABLE user_bans (
 INSERT INTO user_bans (user_id) VALUES ('3');
 INSERT INTO user_bans (user_id) VALUES ('4');
 INSERT INTO user_bans (user_id) VALUES ('5');
+INSERT INTO user_bans (user_id) VALUES ('6');
+INSERT INTO user_bans (user_id) VALUES ('7');
 
 -- ตาราง banned_lists
 CREATE TABLE banned_lists (
