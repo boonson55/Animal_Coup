@@ -6,7 +6,7 @@ const { verifyToken, verifyGuest } = require('../middleware/authMiddleware');
 
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 นาที
-    max: 100, // จำกัดการล็อกอินไม่เกิน 50 ครั้งต่อ IP
+    max: 30, // จำกัดการล็อกอินไม่เกิน 30 ครั้งต่อ IP
     message: 'คุณพยายามเข้าสู่ระบบมากเกินไป กรุณาลองใหม่อีกครั้งใน 15 นาที',
 });
 
