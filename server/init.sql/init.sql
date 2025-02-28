@@ -21,6 +21,7 @@ CREATE TABLE users (
 
 INSERT INTO users (player_name, username, password, email, permission) VALUES ('admin', 'admin', '$argon2id$v=19$m=65536,t=3,p=1$ov/r5q5iT+yrYj5s5JDOJA$YxTsy8aPux8MGJIni2jHWQWiNqNtuUTpZWd7YPuFx7g', 'admin@admin.com', 'admin');
 INSERT INTO users (player_name, username, password, email, permission) VALUES ('admin2', 'admin2', '$argon2id$v=19$m=65536,t=3,p=1$ov/r5q5iT+yrYj5s5JDOJA$YxTsy8aPux8MGJIni2jHWQWiNqNtuUTpZWd7YPuFx7g', 'admin2@admin2.com', 'admin');
+INSERT INTO users (player_name, username, password, email, permission) VALUES ('admin3', 'admin3', '$argon2id$v=19$m=65536,t=3,p=1$ov/r5q5iT+yrYj5s5JDOJA$YxTsy8aPux8MGJIni2jHWQWiNqNtuUTpZWd7YPuFx7g', 'admin3@admin3.com', 'admin');
 INSERT INTO users (player_name, username, password, email, permission) VALUES ('test', 'test', '$argon2id$v=19$m=65536,t=3,p=1$ZLzLRa17Zhe4AjF8LMVPJg$mPfvsqYINEKb7wIICShELJmN/0iZBtfoWTXZz4jt8Ws', 'test@test.com', 'member');
 INSERT INTO users (player_name, username, password, email, permission) VALUES ('member', 'member', '$argon2id$v=19$m=65536,t=3,p=1$Sv3tV/IjmHKzzNAhU8DWzw$b6Mr9/WuhwCE6ECTFtChqdNRSFjqS3CndrNhyxb+EUw', 'member@member.com', 'member');
 INSERT INTO users (player_name, username, password, email, permission) VALUES ('member2', 'member2', '$argon2id$v=19$m=65536,t=3,p=1$Sv3tV/IjmHKzzNAhU8DWzw$b6Mr9/WuhwCE6ECTFtChqdNRSFjqS3CndrNhyxb+EUw', 'member2@member2.com', 'member');
