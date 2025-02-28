@@ -303,7 +303,7 @@ const socketioMiddleware = (io) => {
 
             if (player) {
                 player.coin += 1;
-                addHistory(io, game, game_id, `${player.player_name} ใช้ความสามารถ เก็บ 1 เหรียญ`);
+                addHistory(io, game, game_id, `${player.player_name}: ใช้ความสามารถ เก็บ 1 เหรียญ`);
                 nextPlayerTurn(io, game_id);
             }
         });
@@ -317,16 +317,16 @@ const socketioMiddleware = (io) => {
             if (game.state.currentTurn !== user_id || player.status !== "alive") return;
 
             stopTurnTimer(game_id);
-            addHistory(io, game, game_id, `${player.player_name} ใช้ความสามารถ ขอ 2 เหรียญ`);
+            addHistory(io, game, game_id, `${player.player_name}: ใช้ความสามารถ ขอ 2 เหรียญ`);
 
             game.state.currentAction = { action: "foreignAid", user_id: player.user_id, claimedCard: "lion", target_id: null, blocked: false };
 
             startPopupTimer(io, game_id, () => {
                 if (game.state.currentAction.blocked) {
-                    addHistory(io, game, game_id, `การขอ 2 เหรียญของ ${player.player_name} ถูกบล็อกโดย สิงโต`);
+                    addHistory(io, game, game_id, `${player.player_name}: ขอ 2 เหรียญไม่สำเร็จ ถูกป้องกันโดย สิงโต`);
                 } else {
                     player.coin += 2;
-                    addHistory(io, game, game_id, `${player.player_name} ได้รับ 2 เหรียญ`);
+                    addHistory(io, game, game_id, `${player.player_name}: ได้รับ 2 เหรียญ`);
                 }
                 nextPlayerTurn(io, game_id);
             });
@@ -343,7 +343,7 @@ const socketioMiddleware = (io) => {
             if (game.state.currentTurn !== user_id || player.coin < 7) return;
 
             stopTurnTimer(game_id);
-            addHistory(io, game, game_id, `${player.player_name} ใช้ความสามารถโค่นอำนาจ ใส่ ${targetPlayer.player_name}`);
+            addHistory(io, game, game_id, `${player.player_name}: ใช้ความสามารถ โค่นอำนาจ กับ ${targetPlayer.player_name}`);
 
             player.coin -= 7;
             game.state.currentAction = { action: "coup", user_id: user_id, claimedCard: "", target_id: target_id, blocked: false };
@@ -364,13 +364,13 @@ const socketioMiddleware = (io) => {
             if (game.state.currentTurn !== user_id || player.status !== "alive") return;
 
             stopTurnTimer(game_id);
-            addHistory(io, game, game_id, `${player.player_name} ใช้ความสามารถ ขอภาษี`);
+            addHistory(io, game, game_id, `${player.player_name}: ใช้ความสามารถ ขอภาษี`);
 
             game.state.currentAction = { action: "tax", user_id: player.user_id, claimedCard: "lion", target_id: null, blocked: false };
 
             startPopupTimer(io, game_id, () => {
                 player.coin += 3;
-                addHistory(io, game, game_id, `${player.player_name} ได้รับ 3 เหรียญจากการขอภาษี`);
+                addHistory(io, game, game_id, `${player.player_name}: ได้รับ 3 เหรียญจากการขอภาษี`);
                 nextPlayerTurn(io, game_id);
             });
         });
@@ -386,7 +386,7 @@ const socketioMiddleware = (io) => {
             if (game.state.currentTurn !== user_id || targetPlayer.coin <= 0) return;
 
             stopTurnTimer(game_id);
-            addHistory(io, game, game_id, `${player.player_name} ใช้ความสามารถ ลอบสังหาร กับ ${targetPlayer.player_name}`);
+            addHistory(io, game, game_id, `${player.player_name}: ใช้ความสามารถ ลอบสังหาร กับ ${targetPlayer.player_name}`);
 
             player.coin -= 3;
             game.state.currentAction = {
@@ -401,7 +401,7 @@ const socketioMiddleware = (io) => {
             startPopupTimer(io, game_id, () => {
                 if (!game.state.currentAction.secondPhase) {
                     if (game.state.currentAction.blocked) {
-                        addHistory(io, game, game_id, `การลอบสังหารของ ${player.player_name} ถูกบล็อกโดย เต่า`);
+                        addHistory(io, game, game_id, `${player.player_name}: ลอบสังหารไม่สำเร็จ ถูกป้องกันโดย เต่า`);
                         nextPlayerTurn(io, game_id);
                     } else {
                         if (targetPlayer.status !== "eliminated") {
@@ -409,7 +409,7 @@ const socketioMiddleware = (io) => {
                             startAssassinateTimer(io, game_id, () => {
                                 io.to(game_id).emit("chooseCardDrop", { user_id: target_id });
                             });
-                            addHistory(io, game, game_id, `${player.player_name} ลอบสังหารสำเร็จ`);
+                            addHistory(io, game, game_id, `${player.player_name}: การลอบสังหารสำเร็จ`);
                         } else {
                             nextPlayerTurn(io, game_id);
                         }
@@ -417,7 +417,7 @@ const socketioMiddleware = (io) => {
                 } else {
                     startPopupTimer(io, game_id, () => {
                         if (game.state.currentAction.blocked) {
-                            addHistory(io, game, game_id, `การลอบสังหารของ ${player.player_name} ถูกบล็อกโดย เต่า`);
+                            addHistory(io, game, game_id, `${player.player_name}: ลอบสังหารไม่สำเร็จ ถูกป้องกันโดย เต่า`);
                             nextPlayerTurn(io, game_id);
                         } else {
                             if (targetPlayer.status !== "eliminated") {
@@ -425,7 +425,7 @@ const socketioMiddleware = (io) => {
                                 startAssassinateTimer(io, game_id, () => {
                                     io.to(game_id).emit("chooseCardDrop", { user_id: target_id });
                                 });
-                                addHistory(io, game, game_id, `${player.player_name} ลอบสังหารสำเร็จ`);
+                                addHistory(io, game, game_id, `${player.player_name}: การลอบสังหารสำเร็จ`);
                             } else {
                                 nextPlayerTurn(io, game_id);
                             }
@@ -444,7 +444,7 @@ const socketioMiddleware = (io) => {
             if (game.state.currentTurn !== user_id || player.status !== "alive") return;
 
             stopTurnTimer(game_id);
-            addHistory(io, game, game_id, `${player.player_name} ใช้ความสามารถ แลกเปลี่ยน`);
+            addHistory(io, game, game_id, `${player.player_name}: ใช้ความสามารถ แลกเปลี่ยน`);
 
             game.state.currentAction = { action: "exchange", user_id: player.user_id, claimedCard: "bear", target_id: null, blocked: false };
 
@@ -460,6 +460,7 @@ const socketioMiddleware = (io) => {
                 if (alivePlayers.length === 1) {
                     stopExchangeTimer(game_id);
                     game.state.gameFinished = alivePlayers[0].player_name;
+                    addHistory(io, game, game_id, `${alivePlayers[0].player_name}: เป็นผู้ชนะ!`);
                     alivePlayers[0].isWin = true;
                     delete game.state.currentAction;
                     game.state.passedPlayers = [];
@@ -502,7 +503,7 @@ const socketioMiddleware = (io) => {
             player.cards = [...selectedCards];
 
             shuffleArray(game.state.deck);
-            addHistory(io, game, game_id, `${player.player_name} ได้ทำการแลกเปลี่ยนการ์ด`);
+            addHistory(io, game, game_id, `${player.player_name}: การแลกเปลี่ยนสำเร็จ`);
             nextPlayerTurn(io, game_id);
         });
 
@@ -517,7 +518,7 @@ const socketioMiddleware = (io) => {
             if (game.state.currentTurn !== user_id || targetPlayer.coin <= 0) return;
 
             stopTurnTimer(game_id);
-            addHistory(io, game, game_id, `${player.player_name} ใช้ความสามารถ ขโมย กับ ${targetPlayer.player_name}`);
+            addHistory(io, game, game_id, `${player.player_name}: ใช้ความสามารถ ขโมย กับ ${targetPlayer.player_name}`);
 
             game.state.currentAction = {
                 action: "steal",
@@ -532,24 +533,24 @@ const socketioMiddleware = (io) => {
                 if (!game.state.currentAction.secondPhase) {
                     if (game.state.currentAction.blocked) {
                         const cardName = game.state.currentAction.claimedCard === "cat" ? "แมว" : "หมี";
-                        addHistory(io, game, game_id, `การขโมยของ ${player.player_name} ถูกบล็อกโดย ${cardName}`);
+                        addHistory(io, game, game_id, `${player.player_name}: ขโมยไม่สำเร็จ ถูกป้องกันโดย ${cardName}`);
                     } else {
                         let stolenAmount = Math.min(2, targetPlayer.coin);
                         targetPlayer.coin -= stolenAmount;
                         player.coin += stolenAmount;
-                        addHistory(io, game, game_id, `${player.player_name} ขโมยสำเร็จ ได้รับ ${stolenAmount} เหรียญ`);
+                        addHistory(io, game, game_id, `${player.player_name}: ได้รับ ${stolenAmount} เหรียญจากการขโมย`);
                     }
                     nextPlayerTurn(io, game_id);
                 } else {
                     startPopupTimer(io, game_id, () => {
                         if (game.state.currentAction.blocked) {
                             const cardName = game.state.currentAction.claimedCard === "cat" ? "แมว" : "หมี";
-                            addHistory(io, game, game_id, `การขโมยของ ${player.player_name} ถูกบล็อกโดย ${cardName}`);
+                            addHistory(io, game, game_id, `${player.player_name}: ขโมยไม่สำเร็จ ถูกป้องกันโดย ${cardName}`);
                         } else {
                             let stolenAmount = Math.min(2, targetPlayer.coin);
                             targetPlayer.coin -= stolenAmount;
                             player.coin += stolenAmount;
-                            addHistory(io, game, game_id, `${player.player_name} ขโมยสำเร็จ ได้รับ ${stolenAmount} เหรียญ`);
+                            addHistory(io, game, game_id, `${player.player_name}: ได้รับ ${stolenAmount} เหรียญจากการขโมย`);
                         }
                         nextPlayerTurn(io, game_id);
                     });
@@ -581,17 +582,17 @@ const socketioMiddleware = (io) => {
             game.state.currentAction.blockedBy = blocker.user_id;
 
             if (blockedAction === "foreignAid") {
-                addHistory(io, game, game_id, `${blocker.player_name} บล็อกการ ขอ 2 เหรียญ ด้วย สิงโต`);
+                addHistory(io, game, game_id, `${blocker.player_name}: ป้องกัน การขอ 2 เหรียญ โดย สิงโต`);
             }
 
             if (blockedAction === "assassinate") {
                 game.state.currentAction.claimedCard = "turtle"
-                addHistory(io, game, game_id, `${blocker.player_name} บล็อกการ ลอบสังหาร ด้วย เต่า`);
+                addHistory(io, game, game_id, `${blocker.player_name}: ป้องกัน การลอบสังหาร โดย เต่า`);
             }
 
             if (blockedAction === "steal") {
                 game.state.currentAction.claimedCard = claimedCard.card
-                addHistory(io, game, game_id, `${blocker.player_name} บล็อกการ ขโมย ด้วย ${claimedCard.name}`);
+                addHistory(io, game, game_id, `${blocker.player_name}: ป้องกัน การขโมย โดย ${claimedCard.name}`);
             }
 
             io.to(game_id).emit("chooseBlockChallenge", { blocker_id: blocker.user_id });
@@ -647,11 +648,11 @@ const socketioMiddleware = (io) => {
                     shuffleArray(game.state.deck);
                     targetPlayer.cards.push(game.state.deck.shift());
                 }
-                historyMessage = `${challenger.player_name} ท้าทายไม่สำเร็จและเสียการ์ด 1 ใบ`;
+                historyMessage = `${challenger.player_name}: ท้าทายไม่สำเร็จและเลือกเสียการ์ด 1 ใบ`;
             } else {
                 game.state.playerDropCard = { user_id: targetPlayer.user_id, status: "challenged" };
                 io.to(game_id).emit("chooseCardDrop", { user_id: targetPlayer.user_id });
-                historyMessage = `${targetPlayer.player_name} ถูกท้าทายสำเร็จและเสียการ์ด 1 ใบ`;
+                historyMessage = `${targetPlayer.player_name}: ถูกท้าทายสำเร็จและเลือกเสียการ์ด 1 ใบ`;
             }
 
             addHistory(io, game, game_id, historyMessage);
@@ -677,11 +678,11 @@ const socketioMiddleware = (io) => {
             game.state.assassinateTime = 0;
             stopAssassinateTimer(game_id);
 
-            addHistory(io, game, game_id, `${player.player_name} สูญเสียการ์ด ${name}`);
+            addHistory(io, game, game_id, `${player.player_name}: สูญเสียการ์ด ${name}`);
 
             if (player.cards.length === 0) {
                 player.status = "eliminated";
-                addHistory(io, game, game_id, `${player.player_name} ถูกคัดออกจากเกม!`);
+                addHistory(io, game, game_id, `${player.player_name}: แพ้แล้ว! ถูกคัดออกจากเกม`);
             }
 
             if (game.state.playerDropCard.status === "challenger") {
@@ -724,7 +725,7 @@ const socketioMiddleware = (io) => {
                 nextPlayerTurn(io, game_id);
             }
 
-            addHistory(io, game, game_id, `${targetPlayer.player_name} โดนระบบแบนออกจากเกม`);
+            addHistory(io, game, game_id, `${targetPlayer.player_name}: ถูกระบบแบนออกจากเกม!`);
             io.to(game_id).emit("updateGame", game);
         });
     });
@@ -785,15 +786,15 @@ const startTurnTimer = async (io, game_id) => {
                 game.players = game.players.filter(player => player.user_id !== currentPlayer.user_id);
                 game.state.currentIndex = { status: true, index: nextIndex };
 
-                addHistory(io, game, game_id, `${currentPlayer.player_name} ไม่ใช้ความสามารถ 3 เทิร์น โดนแบนออกจากเกม`);
+                addHistory(io, game, game_id, `${currentPlayer.player_name}: ไม่ใช้ความสามารถ 3 เทิร์น ถูกระบบแบนออกจากเกม!`);
             } else if (currentPlayer.coin >= 10) {
                 autoCoup(io, game_id);
                 if (currentPlayer.coin > 0) currentPlayer.coin -= 1;
-                addHistory(io, game, game_id, `${currentPlayer.player_name} ไม่ใช้โค่นอำนาจโดนลงโทษหัก 1 เหรียญ`);
+                addHistory(io, game, game_id, `${currentPlayer.player_name}: ไม่ใช้โค่นอำนาจถูกลงโทษหัก 1 เหรียญ`);
                 return;
             } else if (currentPlayer.coin > 0) {
                 currentPlayer.coin -= 1;
-                addHistory(io, game, game_id, `${currentPlayer.player_name} ไม่ใช้ความสามารถโดนลงโทษหัก 1 เหรียญ`);
+                addHistory(io, game, game_id, `${currentPlayer.player_name}: ไม่ใช้ความสามารถถูกลงโทษหัก 1 เหรียญ`);
             }
             stopTurnTimer(game_id);
             nextPlayerTurn(io, game_id);
@@ -1019,7 +1020,7 @@ const autoCoup = (io, game_id) => {
 
     const targetPlayer = alivePlayers[Math.floor(Math.random() * alivePlayers.length)];
 
-    addHistory(io, game, game_id, `${currentUser.player_name} หมดเวลา! ระบบสุ่มผู้เล่นโค่นอำนาจ: ${targetPlayer.player_name}`);
+    addHistory(io, game, game_id, `${currentUser.player_name}: หมดเวลา! ระบบสุ่มโค่นอำนาจผู้เล่น ${targetPlayer.player_name}`);
     io.to(game_id).emit("autoCoup", { game_id, user_id: currentUser.user_id, target_id: targetPlayer.user_id });
 };
 
@@ -1032,7 +1033,7 @@ const autoShowCard = (io, game_id) => {
 
     const randomCard = targetPlayer.cards[Math.floor(Math.random() * targetPlayer.cards.length)];
 
-    addHistory(io, game, game_id, `${targetPlayer.player_name} หมดเวลา! ระบบสุ่มการ์ดให้แสดง: ${randomCard}`);
+    addHistory(io, game, game_id, `${targetPlayer.player_name}: หมดเวลา! ระบบสุ่มแสดงการ์ด ${randomCard}`);
     io.to(game_id).emit("autoShowCard", { game_id, user_id: targetPlayer.user_id, selectedCard: randomCard, });
 };
 
@@ -1045,7 +1046,7 @@ const autoDropCard = (io, game_id) => {
 
     const randomCard = targetPlayer.cards[Math.floor(Math.random() * targetPlayer.cards.length)];
 
-    addHistory(io, game, game_id, `${targetPlayer.player_name} หมดเวลา! ระบบสุ่มให้ทิ้งการ์ด: ${randomCard}`);
+    addHistory(io, game, game_id, `${targetPlayer.player_name}: หมดเวลา! ระบบสุ่มทิ้งการ์ด ${randomCard}`);
     io.to(game_id).emit("autoDropCard", { game_id, user_id: targetPlayer.user_id, card: randomCard });
 };
 
@@ -1064,7 +1065,7 @@ const autoSelectedCard = (io, game_id, drawnCards) => {
         selectedCards.push(availableCards[randomIndex]);
         availableCards.splice(randomIndex, 1);
     }
-    addHistory(io, game, game_id, `${currentPlayer.player_name} หมดเวลา! ระบบสุ่มเลือกการ์ดให้แล้ว`);
+    addHistory(io, game, game_id, `${currentPlayer.player_name}: หมดเวลา! ระบบสุ่มเลือกการ์ดให้ผู้เล่น`);
     io.to(game_id).emit("autoSelectedCard", { game_id, user_id: currentPlayer.user_id, selectedCards, drawnCards });
 };
 
@@ -1083,6 +1084,7 @@ const nextPlayerTurn = async (io, game_id) => {
 
     if (alivePlayers.length === 1) {
         game.state.gameFinished = alivePlayers[0].player_name;
+        addHistory(io, game, game_id, `${alivePlayers[0].player_name}: เป็นผู้ชนะ!`);
         alivePlayers[0].isWin = true;
         delete game.state.currentAction;
         game.state.passedPlayers = [];
