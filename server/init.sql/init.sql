@@ -26,6 +26,7 @@ INSERT INTO users (player_name, username, password, email, permission) VALUES ('
 INSERT INTO users (player_name, username, password, email, permission) VALUES ('member2', 'member2', '$argon2id$v=19$m=65536,t=3,p=1$Sv3tV/IjmHKzzNAhU8DWzw$b6Mr9/WuhwCE6ECTFtChqdNRSFjqS3CndrNhyxb+EUw', 'member2@member2.com', 'member');
 INSERT INTO users (player_name, username, password, email, permission) VALUES ('member3', 'member3', '$argon2id$v=19$m=65536,t=3,p=1$Sv3tV/IjmHKzzNAhU8DWzw$b6Mr9/WuhwCE6ECTFtChqdNRSFjqS3CndrNhyxb+EUw', 'member3@member3.com', 'member');
 INSERT INTO users (player_name, username, password, email, permission) VALUES ('member4', 'member4', '$argon2id$v=19$m=65536,t=3,p=1$Sv3tV/IjmHKzzNAhU8DWzw$b6Mr9/WuhwCE6ECTFtChqdNRSFjqS3CndrNhyxb+EUw', 'member4@member4.com', 'member');
+INSERT INTO users (player_name, username, password, email, permission) VALUES ('member5', 'member5', '$argon2id$v=19$m=65536,t=3,p=1$Sv3tV/IjmHKzzNAhU8DWzw$b6Mr9/WuhwCE6ECTFtChqdNRSFjqS3CndrNhyxb+EUw', 'member5@member5.com', 'member');
 
 -- ตาราง user_stats
 CREATE TABLE user_stats (
