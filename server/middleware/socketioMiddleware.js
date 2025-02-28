@@ -771,7 +771,7 @@ const startTurnTimer = async (io, game_id) => {
 
             if (currentPlayer.banStack < 3) currentPlayer.banStack += 1;
 
-            if (currentPlayer.banStack === 100) {
+            if (currentPlayer.banStack === 3) {
                 await updateBanInGame(currentPlayer.user_id);
                 await leaveRoom(room_id, currentPlayer.user_id);
                 await updateRoomPlayer(io, room_id);
