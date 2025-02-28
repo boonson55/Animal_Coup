@@ -32,7 +32,7 @@ exports.insertGame = async (req, res) => {
         const rooms = await getRooms();
         req.io.emit('roomsUpdate', rooms);
 
-        res.status(200).json({ id });
+        res.status(200).json({ message: 'เริ่มเกมสำเร็จ' });
     } catch (error) {
         console.error('เกิดข้อผิดพลาดในการเพิ่มเกม:', error.message);
         res.status(500).json({ error: 'ไม่สามารถเพิ่มเกมได้' });

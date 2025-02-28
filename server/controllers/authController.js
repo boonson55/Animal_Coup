@@ -23,8 +23,6 @@ exports.loginUser = async (req, res) => {
             return res.status(403).json({ error: 'บัญชีของคุณถูกระงับการใช้งาน โปรดติดต่อฝ่ายสนับสนุน' });
         }
 
-        await updateLastLogin(user.user_id);
-
         const token = generateToken(user);
         res.cookie('token', token, {
             httpOnly: true,
