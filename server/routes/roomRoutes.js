@@ -9,6 +9,8 @@ router.get('/room/:id', verifyToken, requireRole('member'), roomController.getRo
 router.post('/room/insert', verifyToken, requireRole('member'), roomController.insertRoom);
 router.post('/room/banInRoom', verifyToken, requireRole('admin'), roomController.getUserBanInRoom);
 router.post('/room/banInGame', verifyToken, requireRole('admin'), roomController.getUserBanInGame);
+router.post('/room/delInRoom', verifyToken, requireRole('admin'), roomController.getUserDelInRoom);
+router.post('/room/delInGame', verifyToken, requireRole('admin'), roomController.getUserDelInGame);
 router.patch('/room/updateRoom', verifyToken, requireRole('member'), roomController.updateRoomStatus);
 router.patch('/room/updateCreator', verifyToken, requireRole('member'), roomController.updateCreator);
 router.delete('/room/leave/:id', verifyToken, requireRole('member'), roomController.leaveRoom);

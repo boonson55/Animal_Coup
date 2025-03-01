@@ -704,7 +704,7 @@ const socketioMiddleware = (io) => {
             }
         });
 
-        socket.on("userBanInGame", ({ game_id, user_id }) => {
+        socket.on("userBanInGame", ({ game_id, user_id, status }) => {
             if (!activeGames[game_id]) return;
             const game = activeGames[game_id];
             const targetPlayer = game.players.find(p => p.user_id === user_id);
@@ -725,7 +725,13 @@ const socketioMiddleware = (io) => {
                 nextPlayerTurn(io, game_id);
             }
 
-            addHistory(io, game, game_id, `${targetPlayer.player_name}: ถูกระบบแบนออกจากเกม!`);
+            if (status) {
+                historyMessage = `${targetPlayer.player_name}: ถูกระบบแบนออกจากเกม!`
+            } else {
+                historyMessage = `${targetPlayer.player_name}: ถูกระบบลบบัญชีออกจากเกม!`
+            }
+
+            addHistory(io, game, game_id, historyMessage);
             io.to(game_id).emit("updateGame", game);
         });
     });

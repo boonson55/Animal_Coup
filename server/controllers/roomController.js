@@ -309,7 +309,7 @@ exports.getUserBanInGame = async (req, res) => {
             }
 
             if (onlineUsers[user_id]) {
-                req.io.to(onlineUsers[user_id]).emit("redirectAdminBan");
+                req.io.to(onlineUsers[user_id]).emit("redirectAdminBan", { ban: true });
             }
 
             const rooms = await getRooms();
@@ -317,6 +317,88 @@ exports.getUserBanInGame = async (req, res) => {
         }
 
         res.status(200).json({ message: 'ปลดแบนสำเร็จ' });
+    } catch (error) {
+        console.error('เกิดข้อผิดพลาดในการดึงข้อมูลห้อง:', error.message);
+        res.status(500).json({ error: 'ไม่สามารถดึงข้อมูลห้องได้' });
+    }
+};
+
+exports.getUserDelInRoom = async (req, res) => {
+    try {
+        const { user_id } = req.body;
+
+        if (!user_id) {
+            return res.status(400).json({ error: 'กรุณาระบุหมายเลขผู้ใช้' });
+        }
+
+        const room = await getUserBanInRoom(user_id);
+        if (!room) {
+            return res.status(200).json({ message: 'ผู้ใช้ยังไม่ได้เข้าร่วมห้อง' });
+        }
+
+        if (room.creator === room.player) {
+            await deleteRoom(room.room_id);
+            req.io.to(onlineUsers[user_id]).emit('roomDeleted', { del: true });
+            req.io.to(String(room.room_id)).emit('roomDeleted');
+            for (const user_id in statusUsers) {
+                if (statusUsers[user_id] && statusUsers[user_id].room_id === String(room.room_id)) {
+                    delete statusUsers[user_id];
+                }
+            }
+        }
+
+        await leaveRoom(room.room_id, user_id);
+        await updateRoomPlayer(req.io, String(room.room_id));
+        if (statusUsers[user_id]) {
+            delete statusUsers[user_id];
+        }
+        if (onlineUsers[user_id]) {
+            req.io.to(onlineUsers[user_id]).emit("roomRedirect", { del: true });
+        }
+
+        const rooms = await getRooms();
+        req.io.emit('roomsUpdate', rooms);
+
+        res.status(200).json({ message: 'ลบผู้ใช้งานสำเร็จ' });
+    } catch (error) {
+        console.error('เกิดข้อผิดพลาดในการดึงข้อมูลห้อง:', error.message);
+        res.status(500).json({ error: 'ไม่สามารถดึงข้อมูลห้องได้' });
+    }
+};
+
+exports.getUserDelInGame = async (req, res) => {
+    try {
+        const { user_id } = req.body;
+
+        if (!user_id) {
+            return res.status(400).json({ error: 'กรุณาระบุหมายเลขผู้ใช้' });
+        }
+
+        const room = await getUserBanInGame(user_id);
+        if (!room) {
+            return res.status(200).json({ message: 'ผู้ใช้ยังไม่ได้เข้าร่วมเกม' });
+        }
+
+        const game_id = await getGameByRoomId(room.room_id);
+        if (!game_id) {
+            return res.status(400).json({ error: 'ไม่พบเกมที่เกี่ยวข้อง' });
+        }
+
+        await leaveRoom(room.room_id, user_id);
+        await updateRoomPlayer(req.io, String(room.room_id));
+
+        if (statusUsers[user_id]) {
+            delete statusUsers[user_id];
+        }
+
+        if (onlineUsers[user_id]) {
+            req.io.to(onlineUsers[user_id]).emit("redirectAdminBan");
+        }
+
+        const rooms = await getRooms();
+        req.io.emit('roomsUpdate', rooms);
+
+        res.status(200).json({ message: 'ลบผู้ใช้งานสำเร็จ' });
     } catch (error) {
         console.error('เกิดข้อผิดพลาดในการดึงข้อมูลห้อง:', error.message);
         res.status(500).json({ error: 'ไม่สามารถดึงข้อมูลห้องได้' });
