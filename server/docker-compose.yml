@@ -13,7 +13,7 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d
+      - ./init:/docker-entrypoint-initdb.d
       - /usr/share/zoneinfo/Asia/Bangkok:/etc/localtime
     networks:
       - app_network
@@ -26,9 +26,8 @@ services:
       PMA_HOST: db
       PMA_PORT: 3306
       MYSQL_ROOT_PASSWORD: rootpassword
-      PMA_USER: root
-      PMA_PASSWORD: rootpassword
       PMA_ARBITRARY: 0
+      PMA_ABSOLUTE_URI: http://localhost:8080/
     ports:
       - "8080:80"
     depends_on:
