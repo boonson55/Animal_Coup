@@ -3,7 +3,7 @@ const router = express.Router();
 const rateLimit = require('express-rate-limit');
 const authController = require('../controllers/authController');
 const { verifyToken, verifyGuest } = require('../middleware/authMiddleware');
-
+// test
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 นาที
     max: 30, // จำกัดการล็อกอินไม่เกิน 30 ครั้งต่อ IP
