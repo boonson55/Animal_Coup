@@ -177,6 +177,7 @@ const socketioMiddleware = (io) => {
             if (!activeGames[game_id]) {
                 const config = await getConfigs();
                 const turn_time = parseInt(config[1].config_value, 10);
+                const popup_time = parseInt(config[2].config_value, 10);
                 let players = await getRoomPlayers(room_id);
                 if (!players || players.length === 0) {
                     return socket.emit("updateGame", { error: "ไม่มีผู้เล่นในห้องนี้" });
@@ -204,11 +205,12 @@ const socketioMiddleware = (io) => {
                     players,
                     state: {
                         deck: deck,
-                        popupTime: 0,
                         gameFinished: "",
                         passedPlayers: [],
                         playerDropCard: {},
                         currentAction: { action: "", user_id: "", claimedCard: "", target_id: "", blocked: false },
+                        popupTime: popup_time,
+                        defaultPopupTime: popup_time,
                         timeTurn: turn_time,
                         defaultTimeTurn: turn_time,
                         currentTurn: players[0].user_id,
@@ -577,7 +579,7 @@ const socketioMiddleware = (io) => {
             if (!blocker || blocker.status !== "alive") return;
             if (!game.state.currentAction || game.state.currentAction.action !== blockedAction) return;
 
-            game.state.popupTime = 30;
+            game.state.popupTime = game.state.defaultPopupTime;
             game.state.currentAction.blocked = true;
             game.state.currentAction.blockedBy = blocker.user_id;
 
@@ -618,7 +620,7 @@ const socketioMiddleware = (io) => {
 
             if (!targetPlayer || targetPlayer.status !== "alive") return;
 
-            game.state.popupTime = 30;
+            game.state.popupTime = game.state.defaultPopupTime;
             game.state.lastChallenger = challenger_id;
 
             io.to(game_id).emit("chooseCardShow", { user_id: targetPlayer.user_id });
@@ -636,7 +638,7 @@ const socketioMiddleware = (io) => {
             if (!challenger || !targetPlayer) return;
 
             let historyMessage = "";
-            game.state.popupTime = 30;
+            game.state.popupTime = game.state.defaultPopupTime;
 
             if (selectedCard === currentAction.claimedCard) {
                 game.state.playerDropCard = { user_id: challenger.user_id, status: "challenger" };
@@ -823,7 +825,7 @@ const startPopupTimer = (io, game_id, callback) => {
     const game = activeGames[game_id];
     if (!game) return;
 
-    game.state.popupTime = 30;
+    game.state.popupTime = game.state.defaultPopupTime;
     game.state.passedPlayers = [];
     game.state.playerDropCard = {};
     game.state.exchangeProcessing = false;
@@ -874,7 +876,7 @@ const startVoteTimer = async (io, game_id) => {
     const game = activeGames[game_id];
     if (!game) return;
 
-    game.state.voteTimer = 30;
+    game.state.voteTimer = game.state.defaultPopupTime;
     game.state.passedPlayers = [];
     const room_id = game.room_id;
     io.to(game_id).emit("updateGame", game);
@@ -950,7 +952,7 @@ const startAssassinateTimer = (io, game_id, callback) => {
     const game = activeGames[game_id];
     if (!game) return;
 
-    game.state.assassinateTime = 30;
+    game.state.assassinateTime = game.state.defaultPopupTime;
     io.to(game_id).emit("updateGame", game);
 
     const assassinateInterval = setInterval(() => {
@@ -986,7 +988,7 @@ const startExchangeTimer = (io, game_id, drawnCards, callback) => {
     const game = activeGames[game_id];
     if (!game) return;
 
-    game.state.exchangeTime = 30;
+    game.state.exchangeTime = game.state.defaultPopupTime;
     io.to(game_id).emit("updateGame", game);
 
     const exchangeInterval = setInterval(() => {
