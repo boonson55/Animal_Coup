@@ -109,7 +109,7 @@ CREATE TABLE configs (
     config_value VARCHAR(20) DEFAULT NULL
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
-INSERT INTO configs (config_name, config_value) VALUES ('ban_time', '30');
+INSERT INTO configs (config_name, config_value) VALUES ('close_time', '30');
 INSERT INTO configs (config_name, config_value) VALUES ('turn_time', '60');
 INSERT INTO configs (config_name, config_value) VALUES ('popup_time', '30');
-INSERT INTO configs (config_name, config_value) VALUES ('close_time', '30');
+INSERT INTO configs (config_name, config_value) VALUES ('ban_time', '30');

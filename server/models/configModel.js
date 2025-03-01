@@ -11,7 +11,7 @@ const getConfigs = async () => {
     }
 };
 
-const updateConfig = async (close_time, turn_time, ban_time) => {
+const updateConfig = async (close_time, turn_time, popup_time, ban_time) => {
     const con = await db.getConnection();
     try {
         await con.beginTransaction();
@@ -22,10 +22,11 @@ const updateConfig = async (close_time, turn_time, ban_time) => {
                 WHEN 1 THEN ?
                 WHEN 2 THEN ?
                 WHEN 3 THEN ?
+                WHEN 4 THEN ?
             END
-            WHERE config_id IN (1, 2, 3)
+            WHERE config_id IN (1, 2, 3, 4)
         `;
-        await con.query(query, [close_time, turn_time, ban_time]);
+        await con.query(query, [close_time, turn_time, popup_time, ban_time]);
 
         await con.commit();
     } catch (error) {
