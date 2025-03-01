@@ -1168,4 +1168,4 @@ const stopCountdownTimer = (room_id) => {
     }
 };
 
-module.exports = { socketioMiddleware, updateRoomPlayer, onlineUsers, statusUsers, activeGames, stopTurnTimer, nextPlayerTurn };
+module.exports = { socketioMiddleware, updateRoomPlayer, onlineUsers, statusUsers };
