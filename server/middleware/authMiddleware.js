@@ -1,4 +1,3 @@
-const { findUserById } = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
