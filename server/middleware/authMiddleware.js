@@ -6,13 +6,6 @@ const verifyGuest = (req, res, next) => {
     try {
         let token = req.cookies.token;
 
-        if (!token && req.headers.authorization) {
-            const authHeader = req.headers.authorization;
-            if (authHeader.startsWith('Bearer ')) {
-                token = authHeader.split(' ')[1];
-            }
-        }
-
         if (!token) {
             const refreshToken = req.cookies.refreshToken;
             if (!refreshToken) {
@@ -47,8 +40,8 @@ const verifyGuest = (req, res, next) => {
 
                 res.cookie('token', newToken, {
                     httpOnly: true,
-                    secure: false,
-                    sameSite: 'Strict',
+                    secure: true,
+                    sameSite: 'None',
                     maxAge: 3 * 24 * 60 * 60 * 1000
                 });
 
@@ -66,13 +59,6 @@ const verifyGuest = (req, res, next) => {
 const verifyToken = (req, res, next) => {
     try {
         let token = req.cookies.token;
-
-        if (!token && req.headers.authorization) {
-            const authHeader = req.headers.authorization;
-            if (authHeader.startsWith('Bearer ')) {
-                token = authHeader.split(' ')[1];
-            }
-        }
 
         if (!token) {
             const refreshToken = req.cookies.refreshToken;
@@ -107,8 +93,8 @@ const verifyToken = (req, res, next) => {
 
                 res.cookie('token', newToken, {
                     httpOnly: true,
-                    secure: false,
-                    sameSite: 'Strict',
+                    secure: true,
+                    sameSite: 'None',
                     maxAge: 7 * 24 * 60 * 60 * 1000
                 });
 
