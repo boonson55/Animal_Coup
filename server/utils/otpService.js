@@ -55,7 +55,7 @@ const sendOTP = async (email) => {
     });
 
     const mailOptions = {
-        from: 'Project Coup <' + process.env.EMAIL_USER + '>',
+        from: 'Animal Coup <' + process.env.EMAIL_USER + '>',
         to: email,
         subject: 'รหัส OTP ของคุณ',
         html: `
@@ -95,7 +95,7 @@ const sendPassword = async (email, newPassword) => {
     });
 
     const mailOptions = {
-        from: 'Project Coup <' + process.env.EMAIL_USER + '>',
+        from: 'Animal Coup <' + process.env.EMAIL_USER + '>',
         to: email,
         subject: 'รหัสผ่านใหม่ของคุณ',
         html: `

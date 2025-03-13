@@ -298,7 +298,7 @@ const socketioMiddleware = (io) => {
                 game.chat = [];
             }
 
-            const chatMessage = { sender, message, timestamp: new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }) };
+            const chatMessage = { sender, message, timestamp: new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit", timeZone: 'Asia/Bangkok' }) };
             game.chat.push(chatMessage);
 
             if (game.chat.length > 30) {
@@ -900,7 +900,10 @@ const startVoteTimer = async (io, game_id) => {
             return;
         }
 
-        game.state.voteTimer -= 1;
+        if (game.state.voteTimer > 0) {
+            game.state.voteTimer -= 1;
+        }
+
         io.to(game_id).emit("updateGame", game);
 
         const winner = game.players.find(p => p.isWin === true);
