@@ -724,11 +724,23 @@ const socketioMiddleware = (io) => {
             const game = activeGames[game_id];
             const targetPlayer = game.players.find(p => p.user_id === user_id);
 
+            if (!targetPlayer) return;
+
             if (game.state.currentTurn === user_id) {
-                let currentIndex = game.players.findIndex(p => p.user_id === game.state.currentTurn);
-                const nextIndex = (currentIndex + 1) % game.players.length;
+                targetPlayer.status = "banned";
+                const alivePlayers = game.players.filter(player => player.status === "alive");
+                let currentIndex = alivePlayers.findIndex(p => p.user_id === user_id);
+
+                if (currentIndex === -1) {
+                    const lastIndex = game.players.findIndex(p => p.user_id === game.state.currentTurn);
+                    currentIndex = alivePlayers.findIndex(p => game.players.indexOf(p) > lastIndex);
+                    if (currentIndex === -1) currentIndex = 0;
+                } else {
+                    currentIndex = (currentIndex + 1) % alivePlayers.length;
+                }
+
                 game.players = game.players.filter(player => player.user_id !== user_id);
-                game.state.currentIndex = { status: true, index: nextIndex };
+                game.state.currentIndex = { status: true, index: currentIndex };
                 stopTurnTimer(game_id);
                 nextPlayerTurn(io, game_id);
             }
@@ -789,7 +801,6 @@ const startTurnTimer = async (io, game_id) => {
         if (game.state.timeTurn <= 0) {
             const currentPlayer = game.players.find(p => p.user_id === game.state.currentTurn);
             if (!currentPlayer) return;
-
             if (currentPlayer.banStack < 3) currentPlayer.banStack += 1;
 
             if (currentPlayer.banStack === 3) {
@@ -801,11 +812,20 @@ const startTurnTimer = async (io, game_id) => {
                 }
                 io.to(onlineUsers[currentPlayer.user_id]).emit("redirectToBan");
 
-                let currentIndex = game.players.findIndex(p => p.user_id === game.state.currentTurn);
-                const nextIndex = (currentIndex + 1) % game.players.length;
+                currentPlayer.status = "banned";
+                const alivePlayers = game.players.filter(player => player.status === "alive");
+                let currentIndex = alivePlayers.findIndex(p => p.user_id === game.state.currentTurn);
 
-                game.players = game.players.filter(player => player.user_id !== currentPlayer.user_id);
-                game.state.currentIndex = { status: true, index: nextIndex };
+                if (currentIndex === -1) {
+                    const lastIndex = game.players.findIndex(p => p.user_id === game.state.currentTurn);
+                    currentIndex = alivePlayers.findIndex(p => game.players.indexOf(p) > lastIndex);
+                    if (currentIndex === -1) currentIndex = 0;
+                } else {
+                    currentIndex = (currentIndex + 1) % alivePlayers.length;
+                }
+
+                game.players = game.players.filter(player => player.user_id !== game.state.currentTurn);
+                game.state.currentIndex = { status: true, index: currentIndex };
 
                 addHistory(io, game, game_id, `${currentPlayer.player_name}: ไม่ใช้ความสามารถ 3 เทิร์น ถูกระบบแบนออกจากเกม!`);
             } else if (currentPlayer.coin >= 10) {
@@ -1133,13 +1153,21 @@ const nextPlayerTurn = async (io, game_id) => {
         return;
     }
 
-    let currentIndex = game.state?.currentIndex?.status ? game.state?.currentIndex?.index : alivePlayers.findIndex(p => p.user_id === game.state.currentTurn);
-    if (currentIndex >= alivePlayers.length) {
-        currentIndex = 0;
+    let currentIndex = game.state?.currentIndex?.status
+        ? game.state?.currentIndex?.index
+        : alivePlayers.findIndex(p => p.user_id === game.state.currentTurn);
+
+    if (currentIndex === -1 && !game.state?.currentIndex?.status) {
+        const lastIndex = game.players.findIndex(p => p.user_id === game.state.currentTurn);
+        currentIndex = alivePlayers.findIndex(p => game.players.indexOf(p) > lastIndex);
+        if (currentIndex === -1) currentIndex = 0;
+    } else {
+        if (!game.state?.currentIndex?.status) {
+            currentIndex = (currentIndex + 1) % alivePlayers.length;
+        }
     }
 
-    const nextIndex = (currentIndex + 1) % alivePlayers.length;
-    const nextPlayer = alivePlayers[nextIndex];
+    const nextPlayer = alivePlayers[currentIndex];
 
     game.state.currentTurn = nextPlayer.user_id;
     game.state.timeTurn = game.state.defaultTimeTurn;
