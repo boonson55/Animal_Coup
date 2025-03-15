@@ -17,7 +17,7 @@ CREATE TABLE users (
     player_name VARCHAR(10) NULL,
     username VARCHAR(20) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL,
-    email VARCHAR(30) NOT NULL UNIQUE,
+    email VARCHAR(40) NOT NULL UNIQUE,
     permission VARCHAR(6) NOT NULL,
     usage_status BOOLEAN NOT NULL DEFAULT 0,
     last_login TIMESTAMP NULL DEFAULT NULL
